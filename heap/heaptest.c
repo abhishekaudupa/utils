@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <assert.h>
+#include <stdlib.h>
 #include "heap.h"
 
 #define ARR_SIZE(arr) 20
@@ -45,7 +46,11 @@ void testHeap(Heap *heap,
 			prev = *(int*)deleted;
 		} else {
 			curr = *(int*)deleted;
-			assert((cbk(pprev, deleted) == true) || prev == curr);
+			//assert((cbk(pprev, deleted) == true) || prev == curr);
+			if(!(cbk(pprev, deleted) == true || prev == curr)) {
+				printf("Test failed.\n");
+				exit(EXIT_FAILURE);
+			}
 			prev = curr;
 		}
 	}

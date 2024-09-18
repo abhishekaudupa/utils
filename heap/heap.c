@@ -6,6 +6,10 @@
 #define ARR_SIZE(arr)					(sizeof(arr)/sizeof(arr[0]))
 #define HEAP_CLBK(heap_ptr, i, j)		(heap_ptr->comparison_callback)(*get_data(heap, i), *get_data(heap, j))
 
+/*******************************************/
+/** Internal datatypes and datastructures **/
+/*******************************************/
+
 typedef struct {
 	void *data;
 } Heap_Node;
@@ -18,6 +22,46 @@ typedef struct Heap {
 	heap_index_t capacity;
 	bool (*comparison_callback)(const void *const parent, const void *const child);
 } Heap;
+
+/**************************************************/
+/** End of internal datatypes and datastructures **/
+/**************************************************/
+
+/************************/
+/** Internal functions **/
+/************************/
+
+	static void
+**get_data(const Heap *const heap,
+		const heap_index_t index);
+
+	static void
+set_data(Heap *const heap,
+		const heap_index_t index,
+		void *const data);
+
+	static void
+swap_data(Heap *const heap,
+		const heap_index_t i,
+		const heap_index_t j);
+
+#ifndef NDEBUG
+
+	static void 
+access_heap(const Heap *const heap,
+		void (*callback)(const void *const),
+		const heap_index_t max_index);
+
+	static void
+swap_data(Heap *const heap,
+		const heap_index_t i,
+		const heap_index_t j);
+
+#endif /* NDEBUG */
+
+/*******************************/
+/** End of internal functions **/
+/*******************************/
 
 	static void
 **get_data(const Heap *const heap,
@@ -53,20 +97,7 @@ swap_data(Heap *const heap,
 	*get_data(heap, j) = temp;
 }
 
-	static void 
-access_heap(const Heap *const heap,
-		void (*callback)(const void *const),
-		const heap_index_t max_index)
-{
-	assert(max_index < heap->max_size_reached);
-	assert(callback);
-
-	for(heap_index_t i = 0; i <= max_index; ++i) {
-		callback(*get_data(heap, i));
-	}
-}
-
-	Heap
+		Heap
 *init_heap(bool (*comparison_callback_supplied)(const void *const, const void *const))
 {
 	if(comparison_callback_supplied == NULL)
@@ -189,6 +220,19 @@ finalize_heap(Heap *const heap,
 }
 
 #ifndef NDEBUG
+
+	static void 
+access_heap(const Heap *const heap,
+		void (*callback)(const void *const),
+		const heap_index_t max_index)
+{
+	assert(max_index < heap->max_size_reached);
+	assert(callback);
+
+	for(heap_index_t i = 0; i <= max_index; ++i) {
+		callback(*get_data(heap, i));
+	}
+}
 
 	void
 print_heap(const Heap *const heap,
