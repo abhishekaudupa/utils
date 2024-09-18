@@ -1,10 +1,14 @@
-all: debug release
+all: test debug release
 
 debug:
 	gcc -Wall -Wextra -Werror -O0 -g heap.c heaptest.c -o heaptest_d
 
 release: 
 	gcc -Wall -Wextra -Werror -DNDEBUG -O2 heap.c heaptest.c -o heaptest_r
+
+test:
+	./heaptest_r
+	./heaptest_d
 
 clean:
 	@rm -rf heaptest_r heaptest_d

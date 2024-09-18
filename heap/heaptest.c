@@ -32,13 +32,11 @@ void testHeap(Heap *heap,
 	int prev, curr, *pprev;
 	void *deleted = NULL;
 
-	printf("Insertion...\n");
 	for(int i = 0; i < size; ++i) {
 		insert_heap(heap, data + i);
 	}
 
 	pprev = NULL;
-	printf("Deletion...\n");
 	for(int i = 0; i < size; ++i) {
 		delete_heap(heap, &deleted);
 		if(!pprev) {
@@ -46,7 +44,6 @@ void testHeap(Heap *heap,
 			prev = *(int*)deleted;
 		} else {
 			curr = *(int*)deleted;
-			//assert((cbk(pprev, deleted) == true) || prev == curr);
 			if(!(cbk(pprev, deleted) == true || prev == curr)) {
 				printf("Test failed.\n");
 				exit(EXIT_FAILURE);
@@ -70,7 +67,6 @@ main()
 	minheap = init_heap(min_heap_cmp_clbk);
 	maxheap = init_heap(max_heap_cmp_clbk);
 
-	printf("Testing begin...\n");
 	testHeap(minheap, arr, ARR_SIZE(arr), min_heap_cmp_clbk);
 	testHeap(maxheap, arr, ARR_SIZE(arr), max_heap_cmp_clbk);
 

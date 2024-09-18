@@ -58,6 +58,14 @@ swap_data(Heap *const heap,
 		const heap_index_t i,
 		const heap_index_t j);
 
+static STATUS
+insert(Heap *const heap,
+		void *const data);
+
+static STATUS
+delete(Heap *const heap,
+		void **deleted_data);
+
 #ifndef NDEBUG
 
 static void 
@@ -129,20 +137,14 @@ swap_data(Heap *const heap,
 	return heap;
 }
 
-	STATUS
-insert_heap(Heap *const heap,
+	static STATUS
+insert(Heap *const heap,
 		void *const data)
 {
+	assert(heap);
+	assert(data);
+
 	heap_index_t bubble_index, parent_index;
-
-	if(heap == NULL)
-		return ERR_NULL_INPUT;
-
-	if(data == NULL)
-		return ERR_NULL_INPUT;
-
-	if(heap->size >= heap->capacity)
-		return ERR_CAP_LIMIT;
 
 	if(heap->size == 0) {
 		set_data(heap, 0, data);
@@ -173,16 +175,31 @@ insert_heap(Heap *const heap,
 	}
 
 	return SUCCESS;
+
 }
-
 	STATUS
-delete_heap(Heap *const heap,
-		void **deleted_data)
+insert_heap(Heap *const heap,
+		void *const data)
 {
-	heap_index_t lc_index, rc_index, curr_index, swap_index;
-
 	if(heap == NULL)
 		return ERR_NULL_INPUT;
+
+	if(data == NULL)
+		return ERR_NULL_INPUT;
+
+	if(heap->size >= heap->capacity)
+		return ERR_CAP_LIMIT;
+
+	return insert(heap, data);
+}
+
+	static STATUS
+delete(Heap *const heap,
+		void **deleted_data)
+{
+	assert(heap);
+
+	heap_index_t lc_index, rc_index, curr_index, swap_index;
 
 	if(heap->size == 0)
 		return SUCCESS;
@@ -220,6 +237,17 @@ delete_heap(Heap *const heap,
 	}
 
 	return SUCCESS;
+
+}
+
+	STATUS
+delete_heap(Heap *const heap,
+		void **deleted_data)
+{
+	if(heap == NULL)
+		return ERR_NULL_INPUT;
+
+	return delete(heap, deleted_data);
 }
 
 	void
