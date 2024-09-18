@@ -8,14 +8,14 @@
 #define HEAP_MAX_CAP 20
 #endif /* HEAP_MAX_CAP */
 
-typedef uint16_t heap_index_t;
 typedef struct Heap Heap;
 
 typedef enum {
 	SUCCESS,
 	FAILURE,
 	ERR_NULL_INPUT,
-	ERR_CAP_LIMIT
+	ERR_CAP_LIMIT,
+	ERR_NO_MEM
 } STATUS;
 
 #ifndef NDEBUG

@@ -1,3 +1,5 @@
+/**/
+
 #include <assert.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -10,17 +12,28 @@
 /** Internal datatypes and datastructures **/
 /*******************************************/
 
+/* Heap array index type. */
+typedef uint16_t heap_index_t;
+
+/* Comparison callback for the heap. */
+typedef bool (*comparison_callback_t)(const void *const, const void *const);
+
+/* Heap element access callback. */
+typedef void (*heap_access_callback_t)(const void *const);
+
+/* A single node on the heap. */
 typedef struct {
 	void *data;
 } Heap_Node;
 
+/* The heap itself. */
 typedef struct Heap {
 	Heap_Node static_heap_arr[HEAP_MAX_CAP];
 	Heap_Node *heap_arr;
 	heap_index_t size;
 	heap_index_t max_size_reached;
 	heap_index_t capacity;
-	bool (*comparison_callback)(const void *const parent, const void *const child);
+	comparison_callback_t comparison_callback;
 } Heap;
 
 /**************************************************/
@@ -31,28 +44,28 @@ typedef struct Heap {
 /** Internal functions **/
 /************************/
 
-	static void
+static void
 **get_data(const Heap *const heap,
 		const heap_index_t index);
 
-	static void
+static void
 set_data(Heap *const heap,
 		const heap_index_t index,
 		void *const data);
 
-	static void
+static void
 swap_data(Heap *const heap,
 		const heap_index_t i,
 		const heap_index_t j);
 
 #ifndef NDEBUG
 
-	static void 
+static void 
 access_heap(const Heap *const heap,
 		void (*callback)(const void *const),
 		const heap_index_t max_index);
 
-	static void
+static void
 swap_data(Heap *const heap,
 		const heap_index_t i,
 		const heap_index_t j);
@@ -97,8 +110,8 @@ swap_data(Heap *const heap,
 	*get_data(heap, j) = temp;
 }
 
-		Heap
-*init_heap(bool (*comparison_callback_supplied)(const void *const, const void *const))
+	Heap
+*init_heap(comparison_callback_t comparison_callback_supplied)
 {
 	if(comparison_callback_supplied == NULL)
 		return NULL;
@@ -236,7 +249,7 @@ access_heap(const Heap *const heap,
 
 	void
 print_heap(const Heap *const heap,
-		void (*print_data)(const void *const))
+		heap_access_callback_t print_data)
 {
 	if(!heap || !print_data)
 		return;
@@ -246,7 +259,7 @@ print_heap(const Heap *const heap,
 
 	void
 debug_print_heap(const Heap *const heap,
-		void (*print_data)(const void *const))
+		heap_access_callback_t print_data)
 {
 	if(!heap || !print_data)
 		return;
