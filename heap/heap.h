@@ -21,11 +21,11 @@ typedef enum {
 #ifndef NDEBUG
 
 void
-print_heap(const Heap *const heap,
+access_normal_heap(const Heap *const heap,
 		void (*print_data)(const void *const));
 
 void
-debug_print_heap(const Heap *const heap,
+access_extended_heap(const Heap *const heap,
 		void (*print_data)(const void *const));
 
 #endif /* NDEBUG */

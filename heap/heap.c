@@ -73,11 +73,6 @@ access_heap(const Heap *const heap,
 		void (*callback)(const void *const),
 		const heap_index_t max_index);
 
-static void
-swap_data(Heap *const heap,
-		const heap_index_t i,
-		const heap_index_t j);
-
 #endif /* NDEBUG */
 
 /*******************************/
@@ -255,8 +250,9 @@ finalize_heap(Heap *const heap,
 		void (*free_callback)(void*))
 {
 	if(free_callback != NULL)
-		for(heap_index_t i = 0; i < heap->max_size_reached; ++i)
+		for(heap_index_t i = 0; i < heap->max_size_reached; ++i) {
 			free_callback(*get_data(heap, i));
+		}
 	free(heap);
 }
 
@@ -276,7 +272,7 @@ access_heap(const Heap *const heap,
 }
 
 	void
-print_heap(const Heap *const heap,
+access_normal_heap(const Heap *const heap,
 		heap_access_callback_t print_data)
 {
 	if(!heap || !print_data)
@@ -286,7 +282,7 @@ print_heap(const Heap *const heap,
 }
 
 	void
-debug_print_heap(const Heap *const heap,
+access_extended_heap(const Heap *const heap,
 		heap_access_callback_t print_data)
 {
 	if(!heap || !print_data)
